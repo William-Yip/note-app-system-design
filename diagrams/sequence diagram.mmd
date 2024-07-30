@@ -1,0 +1,37 @@
+sequenceDiagram
+    participant User
+    participant Client
+    participant AuthServer
+    participant NotesServer
+
+    User ->> Client: Register / Login
+    Client ->> AuthServer: Register / Login Request
+    AuthServer -->> Client: JWT Token / Error Message
+    Client -->> User: Display JWT Token / Error Message
+
+    User ->> Client: Write Note / Request Notes / Delete Note
+    Client ->> AuthServer: Validate JWT
+    AuthServer -->> Client: JWT Valid / Invalid
+
+    alt JWT Invalid
+        Client -->> User: Show Unauthorized Error
+    else JWT Valid
+        opt Save Note
+            Client ->> NotesServer: Save Note
+            NotesServer -->> Client: Note Saved Confirmation
+            Client -->> User: Show Note Saved Confirmation
+        end
+
+        opt View Notes
+            Client ->> NotesServer: Request Notes
+            NotesServer -->> Client: Return List of Notes
+            Client -->> User: Display List of Notes
+        end
+
+        opt Delete Note
+            Client ->> NotesServer: Delete Note
+            NotesServer -->> Client: Note Deletion Confirmation
+            Client -->> User: Show Note Deletion Confirmation
+        end
+    end
+
