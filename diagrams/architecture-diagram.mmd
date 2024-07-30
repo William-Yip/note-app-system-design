@@ -1,0 +1,44 @@
+graph TD
+    subgraph Client
+        User[User]
+        BrowserClient[Browser Client]
+    end
+
+    subgraph Backend
+        ApiGateway[API Gateway]
+
+        AuthLB[Load Balancer]
+        NotesLB[Load Balancer]
+
+        AuthServer[AuthServer]
+        NotesServer[NotesServer]
+    end
+
+    subgraph Databases
+        SQL[SQL database]
+        NoSQL[NoSQL database]
+    end
+
+    subgraph Caching
+        Cache[Redis]
+    end
+
+    subgraph Storage
+        S3[S3: Front-end, Images, Other Resources]
+    end
+
+    User --> BrowserClient
+    BrowserClient --> S3
+    BrowserClient --> ApiGateway
+    ApiGateway --> AuthLB
+    AuthLB --> AuthServer
+    AuthServer --> SQL
+    AuthServer --> NotesLB
+
+    NotesLB --> NotesServer
+    NotesServer --> Cache
+    NotesServer --> NoSQL
+
+    style Storage fill:#d1c958,stroke:#000,stroke-width:2px
+    style Backend fill:#f0a595,stroke:#000,stroke-width:2px,stroke-
+    style Databases fill:#58b3d1,stroke:#000,stroke-width:2px
